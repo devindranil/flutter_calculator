@@ -1,3 +1,5 @@
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -27,8 +29,70 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  int fn;
+  int sn;
+  String textto = "";
+  String res;
+  String exp;
+  String opp;
+  double fontSize = 30.0;
+
+  buttonPressed(String buttonText){
+   print(buttonText);
+   if(buttonText == "C"){
+     res = res.substring(0,res.length - 1);
+     if(res ==""){
+       res = "0";
+     }
+   }else if(buttonText == "AC"){
+     textto ="";
+     fn=0;
+     sn=0;
+     res="";
+     // fn=0;
+     // sn=0;
+     // res="";
+   }else if(buttonText == "+" || buttonText == "×" || buttonText == "-" || buttonText == "/" || buttonText == "%"){
+     fn = int.parse(textto);
+     res="";
+     opp = buttonText;
+   }else if(buttonText =="."){
+     if(res.contains(".")){
+       print("alraedy contains a decimel");
+       return;
+     }else{
+        res = buttonText;
+     }
+   }
+   else if(buttonText == "="){
+     sn = int.parse(textto);
+     if(opp == "+"){
+       res = (fn+sn).toString();
+     }
+     if(opp == "×"){
+       res = (fn*sn).toString();
+     }
+     if(opp == "-"){
+       res = (fn-sn).toString();
+     }
+     if(opp == "/"){
+       res = (fn~/sn).toString();
+     }
+     if(opp == "%"){
+       res = ((fn/sn)*100).toString();
+     }
+   }else{
+     res = int.parse(textto+buttonText).toString();
+     fontSize = 30.0;
+   }
+   setState(() {
+     textto = res;
+   });
+  }
+
   //CREATE A CUSTOM WIDGET FOR INPUT CONTAINER BUTTONS
-  Widget Button(String buttonText, String color, String txtcolor) {
+  Widget Button(String buttonVal, String color, String txtcolor) {
     //CREATE A 3 VARIABLE
     return Expanded(
       //BECAUSE WE WANT ALL THE BUTTON WIDTH AND HEIGHT EQUALLY SAME
@@ -49,19 +113,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
         child: MaterialButton(
           padding: EdgeInsets.all(0.5),
-          child: Text('$buttonText',
+          child: Text('$buttonVal',
               style: TextStyle(
                   fontSize: 30,
                   color: HexColor("$txtcolor"),
                   fontWeight: FontWeight.bold),
               textAlign: TextAlign.center),
-          onPressed: () {},
+          onPressed: () => buttonPressed(buttonVal)
         ),
       ),
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -81,10 +143,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 alignment: Alignment.bottomLeft,
                 //text padding
                 padding:
-                    EdgeInsets.only(left: 36, bottom: 10, right: 0, top: 0),
+                EdgeInsets.only(left: 36, bottom: 10, right: 0, top: 0),
                 //output text
                 child: Text(
-                  "650",
+                  "$textto",
                   style: TextStyle(
                     fontSize: 75.8,
                     fontWeight: FontWeight.bold,
@@ -147,16 +209,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     Row(
                       children: [
-                        Button("%", "#273746", "#ffffff"),
-                        Button("*", "#273746", "#ffffff"),
+                        Button("×", "#273746", "#ffffff"),
                         Button("/", "#273746", "#ffffff"),
+                        Button("%", "#273746", "#ffffff"),
+
                       ],
                     ),
+
                     Row(
                       children: [
-                        Button(
-                          "=","#273746","#ffffff"
-                        ),
+                        Button("=", "#273746", "#ffffff"),
                       ],
                     )
                   ],
